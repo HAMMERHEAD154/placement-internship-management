@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Placement & Internship Portal</title>
+</head>
+<body>
+    <h1>Placement & Internship Management System</h1>
+
+    <input id="name" placeholder="Student Name">
+    <input id="company" placeholder="Company Name">
+    <button onclick="submitData()">Apply</button>
+
+    <h2>Applications</h2>
+    <ul id="list"></ul>
+
+    <script>
+        async function submitData() {
+            const name = document.getElementById("name").value;
+            const company = document.getElementById("company").value;
+
+            await fetch("http://localhost:3000/apply", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name, company })
+            });
+
+            loadData();
+        }
+
+        async function loadData() {
+            const res = await fetch("http://localhost:3000/applications");
+            const data = await res.json();
+
+            const list = document.getElementById("list");
+            list.innerHTML = "";
+
+            data.forEach(a => {
+                const li = document.createElement("li");
+                li.innerText = a.name + " applied to " + a.company;
+                list.appendChild(li);
+            });
+        }
+
+        loadData();
+    </script>
+</body>
+</html>
